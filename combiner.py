@@ -1,8 +1,8 @@
 import csv
 
-files = [#'stillOut.csv', 
-#'walkOut.csv', 
-#'runOut.csv'] 
+files = ['stillOut.csv', 
+'walkOut.csv', 
+'runOut.csv', 
 'sorenWalkCutOut.csv', 
 'sorenRunCutOut.csv']
 
