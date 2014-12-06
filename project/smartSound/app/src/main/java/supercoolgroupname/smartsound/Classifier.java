@@ -5,7 +5,8 @@ package supercoolgroupname.smartsound;
  */
 public class Classifier {
     public static DerivedContext getContext(){
-        return DerivedContext.undefined;
+        //return DerivedContext.undefined;
+        return DerivedContext.outside;
         //TODO detect current context
     }
 }

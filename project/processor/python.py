@@ -1,5 +1,4 @@
 import csv
-import re
 
 with open('output.csv', 'rb') as csvfile:
     spamreader = csv.DictReader(csvfile, delimiter=',')

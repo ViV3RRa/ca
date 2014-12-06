@@ -79,10 +79,13 @@ public class MainActivity extends Activity implements SensorEventListener {
             z = event.values[2];
         }
 
-           TextView tv = (TextView) findViewById(R.id.activity);
-           tv.setText("X: " + x + "\nY: " + y + "\nZ: " + z);
+        TextView activity = (TextView) findViewById(R.id.activity);
+        TextView action = (TextView) findViewById(R.id.action);
+
+        activity.setText("X: " + x + "\nY: " + y + "\nZ: " + z);
 
         DerivedContext dCon = Classifier.getContext();
+        action.setText(dCon.toString());
         ContextMapper.handleContext(dCon, this);
     }
 
