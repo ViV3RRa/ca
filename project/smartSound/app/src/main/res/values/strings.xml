@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">smartSound</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="current_activity">Current activity:</string>
+    <string name="applied_actions">Applied actions:</string>
+    <string name="activity"></string>
+
+</resources>
