@@ -4,35 +4,43 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+/*
 import android.hardware.SensorEventListener;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+*/
 import android.view.View;
+/*
 import android.widget.CompoundButton;
 import android.widget.TextView;
+*/
+import android.widget.TextView;
 import android.widget.ToggleButton;
+/*
 import android.widget.CompoundButton;
+*/
 
+public class MainActivity extends Activity implements Classifier.ClassifierListener /*implements SensorEventListener*/ {
 
-public class MainActivity extends Activity implements SensorEventListener {
-
+    /*
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
+    */
+    private SmartSoundMeasurement sm = new SmartSoundMeasurement();
 
+    /*
     float x = 0;
     float y = 0;
     float z = 0;
+    */
     boolean on = false;
-
-    //TextView activity = (TextView) findViewById(R.id.activity);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,15 +68,19 @@ public class MainActivity extends Activity implements SensorEventListener {
         on = ((ToggleButton) v).isChecked();
 
         if(on){
-            senSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+
+            Classifier.registerListener(this);
+            //senSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+            //senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            //senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+            sm.start();
         } else{
-            senSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            senSensorManager.unregisterListener(this);
+            //senSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+            //senSensorManager.unregisterListener(this);
+            sm.stop();
         }
     }
-
+/*
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
@@ -91,6 +103,22 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+    */
+
+    @Override
+    public void onContextChange(final DerivedContext new_context) {
+        ContextMapper.handleContext(new_context, this);
+        final TextView action = (TextView) findViewById(R.id.action);
+        action.post(new Runnable() {
+            @Override
+            public void run() {
+                // The bar has an input range of [0.0 ; 1.0] and 10 segments.
+                // Each LED corresponds to 6 dB.
+                action.setText(new_context.toString());
+            }
+        });
 
     }
 }
