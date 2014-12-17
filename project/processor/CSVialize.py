@@ -1,9 +1,10 @@
 import csv
 import re
+import sys
 
-window_width = 100;
+window_width = 10;
 
-with open('log.csv', 'rb') as csvfile:
+with open(sys.argv[1], 'rb') as csvfile:
     spamreader = csv.DictReader(csvfile, delimiter='|')
     windows = [];
     cur_window = {};
@@ -134,11 +135,10 @@ with open('log.csv', 'rb') as csvfile:
     # Output csv
     print(','.join(keys));
     for window_map in window_maps:
-        window_string = ""
+        window_strings = []
         for key in keys:
             if(key in window_map):
-                window_string += str(window_map[key]);
+                window_strings.append(str(window_map[key]));
             else:
-                window_string += "NO-DATA"
-            window_string += ","
-        print(window_string);
+                window_strings.append("NO-DATA");
+        print ",".join(window_strings);

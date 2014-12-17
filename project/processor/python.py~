@@ -1,8 +1,8 @@
 import csv
+import sys
 
-with open('output.csv', 'rb') as csvfile:
+with open(sys.args[1], 'rb') as csvfile:
     spamreader = csv.DictReader(csvfile, delimiter=',')
-    for row in spamreader: print row
     
     # Build a global key map
     keys = spamreader.next().keys();

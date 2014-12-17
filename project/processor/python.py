@@ -1,6 +1,7 @@
 import csv
+import sys
 
-with open('output.csv', 'rb') as csvfile:
+with open(sys.argv[1], 'rb') as csvfile:
     spamreader = csv.DictReader(csvfile, delimiter=',')
     
     # Build a global key map

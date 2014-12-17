@@ -1,7 +1,7 @@
 import csv
+import sys
 
-files = ['cData.csv',
-'lData.csv']
+files = sys.argv[1:]
 
 
 print 'min,max,avg,stdDev,status' 

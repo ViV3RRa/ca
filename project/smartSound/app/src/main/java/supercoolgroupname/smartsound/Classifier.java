@@ -16,6 +16,8 @@ public class Classifier {
         public void onContextChange(DerivedContext con);
     }
 
+    private static boolean isStill = false;
+
     private static ClassifierListener listener = null;
 
     public static void registerListener(ClassifierListener listen)
@@ -27,16 +29,47 @@ public class Classifier {
 
     private static final int window_size = 1000;
     private static List<Double> soundData = new ArrayList<Double>();
+
     public static void appendReading(double soundReading)
     {
         soundData.add(soundReading);
         if(soundData.size() >= window_size)
         {
-            //Pair<Double,Double> avg_stddiv = calculate_avg_and_stddiv();
-            double median = calculate_median();
-            context = findContext(median);
-            listener.onContextChange(context);
+            if(isStill) {
+                //Pair<Double,Double> avg_stddiv = calculate_avg_and_stddiv();
+                double median = calculate_median();
+                context = findContext(median);
+                listener.onContextChange(context);
+            }
             soundData.subList(0,window_size/2).clear();
+        }
+    }
+
+    private static final int window_sizeAcc = 1000;
+    private static List<Double> eNormList = new ArrayList<Double>();
+
+    public static void appendReading(double x, double y, double z)
+    {
+        double enorm = Math.sqrt(x*x+y*y+z*z);
+        eNormList.add(enorm);
+        if(eNormList.size() >= window_sizeAcc){
+
+            double avg = 0;
+            for(double reading : eNormList){
+                avg += reading;
+            }
+
+            avg /= eNormList.size();
+            DerivedContext contextAcc = findContextAcc(avg);
+            if(contextAcc == DerivedContext.cinema){
+                isStill = true;
+            }
+            else{
+                isStill = false;
+                context = contextAcc;
+                listener.onContextChange(context);
+            }
+            eNormList.subList(0,window_sizeAcc/2).clear();
         }
     }
 
@@ -44,8 +77,8 @@ public class Classifier {
     {
        // double avg = avg_stddiv.first;
         //double stdDiv = avg_stddiv.second;
-        Log.d("median: ","" + median);
-        Log.d("size: ","" + soundData.size());
+        Log.i("median: ","" + median);
+        Log.i("size: ","" + soundData.size());
 
         // TODO: Classifier tree here
         if(median <= 41.0364){
@@ -70,6 +103,17 @@ public class Classifier {
                 return DerivedContext.cinema;
         else
             return DerivedContext.cinema;*/
+    }
+
+    private static DerivedContext findContextAcc(double avg){
+        Log.i("avg: ","" + avg);
+        Log.i("eNormList size: ","" + eNormList.size());
+        // TODO: Classifier tree here
+        if(avg <= 9.939561){
+            return DerivedContext.cinema;
+        }else{
+            return DerivedContext.outside;
+        }
     }
 
     /*private static Pair<Double, Double> calculate_avg_and_stddiv()
