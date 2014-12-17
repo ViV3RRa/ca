@@ -3,6 +3,9 @@ package supercoolgroupname.smartsound;
 import android.util.Log;
 import android.util.Pair;
 
+import org.json.JSONException;
+
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +22,7 @@ public class Classifier {
     private static boolean isStill = false;
 
     private static ClassifierListener listener = null;
+    private static ExternalCommunicator ex = new ExternalCommunicator();
 
     public static void registerListener(ClassifierListener listen)
     {
@@ -77,11 +81,22 @@ public class Classifier {
     {
        // double avg = avg_stddiv.first;
         //double stdDiv = avg_stddiv.second;
+
         Log.i("median: ","" + median);
         Log.i("size: ","" + soundData.size());
 
+        double m;
+        try {
+            m = ex.getMedianForSound();
+        } catch (MalformedURLException e) {
+            m = 41.0364;
+        } catch (JSONException e) {
+            m = 41.0364;
+            e.printStackTrace();
+        }
+
         // TODO: Classifier tree here
-        if(median <= 41.0364){
+        if(median <= m){
             return DerivedContext.outside;
         }else{
             return DerivedContext.cinema;
@@ -139,9 +154,7 @@ public class Classifier {
     private static double calculate_median(){
         List<Double> newSoundData = new ArrayList<Double>(soundData);
         Collections.sort(newSoundData);
-        double median = newSoundData.get(newSoundData.size()/2);
-
-        return median;
+       return newSoundData.get(newSoundData.size()/2);
     }
 
     public static DerivedContext getContext(){
