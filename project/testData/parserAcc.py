@@ -1,0 +1,44 @@
+import csv
+import math
+import sys
+
+window_size = 1000
+with open(sys.argv[1], 'rb') as csvfile:
+	spamreader = csv.DictReader(csvfile, delimiter=',')
+	eNormList = []
+	for row in spamreader:
+		x = float(row['AccX'])
+		y = float(row['AccY'])
+		z = float(row['AccZ'])
+		eNorm = math.sqrt(x*x+y*y+z*z)
+		eNormList.append(eNorm)
+		#print(x, y, z, eNorm)
+
+	windows =[]
+	while len(eNormList) >= window_size:
+		window = []
+		for i in range(0, window_size/2):
+			window.append(eNormList.pop(0))
+		for i in range(0, window_size/2):
+			window.append(eNormList[i])
+		windows.append(window)
+		#windowsT.append(windowT)
+		#windowsSt.append(windowSt)
+
+	print 'min,max,avg,stdVar'
+	for w in windows:
+		minVV = min(w)
+		maxVV = max(w)
+		avgVV = sum(w)/float(len(w)) 
+		
+		sumVV = 0
+
+		for i in w:
+			sumVV += math.pow(avgVV-i, 2)
+		
+		sumDiv = sumVV/window_size
+		stdVarVV = math.sqrt(sumDiv)
+		print minVV, ',', maxVV, ',', avgVV, ',', stdVarVV
+
+
+	
